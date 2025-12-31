@@ -2,7 +2,7 @@
    Responsibilities:
    - mobile nav toggle
    - smooth scrolling
-   - basic form validation + mailto building
+   - contact email helpers (copy + mailto links)
 */
 
 (function () {
@@ -87,96 +87,88 @@
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-  // Contact form -> mailto
-  const form = document.querySelector("[data-contact-form]");
-  const statusEl = document.querySelector("[data-form-status]");
+  // Contact card
+  const contactCard = document.querySelector("[data-contact-email]");
+  const copyStatusEl = document.querySelector("[data-copy-status]");
 
-  function setStatus(message, isError) {
-    if (!statusEl) return;
-    statusEl.textContent = message;
-    statusEl.classList.toggle("is-error", Boolean(isError));
+  function setCopyStatus(message, isError) {
+    if (!copyStatusEl) return;
+    copyStatusEl.textContent = message;
+    copyStatusEl.classList.toggle("is-error", Boolean(isError));
+    copyStatusEl.classList.toggle("is-success", Boolean(message) && !isError);
   }
 
-  function setInvalid(el, isInvalid) {
-    el.setAttribute("aria-invalid", isInvalid ? "true" : "false");
+  function copyTextFallback(value) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = value;
+    input.setAttribute("readonly", "true");
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    input.style.top = "0";
+    document.body.appendChild(input);
+    input.select();
+    input.setSelectionRange(0, input.value.length);
+
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (err) {
+      ok = false;
+    }
+
+    document.body.removeChild(input);
+    return ok;
   }
 
-  function isValidEmail(value) {
-    // Intentionally simple: enough to catch obvious mistakes.
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  async function copyToClipboard(value) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch (err) {
+        // Fall back to the older execCommand approach below.
+      }
+    }
+    return copyTextFallback(value);
   }
 
-  function encodeLine(s) {
-    return encodeURIComponent(String(s).trim());
-  }
+  if (contactCard instanceof HTMLElement) {
+    const email = contactCard.getAttribute("data-contact-email") || "";
+    const emailLink = contactCard.querySelector("[data-email-link]");
+    const openEmailClientLink = contactCard.querySelector("[data-open-email-client]");
+    const copyBtn = contactCard.querySelector("[data-copy-email]");
+    const footerEmailLink = document.querySelector("[data-footer-email-link]");
 
-  if (form instanceof HTMLFormElement) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      setStatus("");
+    if (emailLink instanceof HTMLAnchorElement) {
+      emailLink.textContent = email;
+      emailLink.href = "mailto:" + email;
+      emailLink.setAttribute("aria-label", "Email MineAnvil at " + email);
+    }
 
-      const nameEl = form.querySelector("#name");
-      const emailEl = form.querySelector("#email");
-      const messageEl = form.querySelector("#message");
+    if (openEmailClientLink instanceof HTMLAnchorElement) {
+      openEmailClientLink.href = "mailto:" + email;
+      openEmailClientLink.setAttribute("aria-label", "Open your email client to message " + email);
+    }
 
-      if (!(nameEl instanceof HTMLInputElement)) return;
-      if (!(emailEl instanceof HTMLInputElement)) return;
-      if (!(messageEl instanceof HTMLTextAreaElement)) return;
+    if (footerEmailLink instanceof HTMLAnchorElement) {
+      footerEmailLink.textContent = email;
+      footerEmailLink.href = "mailto:" + email;
+      footerEmailLink.setAttribute("aria-label", "Email MineAnvil at " + email);
+    }
 
-      const name = nameEl.value.trim();
-      const email = emailEl.value.trim();
-      const message = messageEl.value.trim();
-
-      let ok = true;
-
-      if (!name) {
-        ok = false;
-        setInvalid(nameEl, true);
-      } else {
-        setInvalid(nameEl, false);
-      }
-
-      if (!email || !isValidEmail(email)) {
-        ok = false;
-        setInvalid(emailEl, true);
-      } else {
-        setInvalid(emailEl, false);
-      }
-
-      if (!message) {
-        ok = false;
-        setInvalid(messageEl, true);
-      } else {
-        setInvalid(messageEl, false);
-      }
-
-      if (!ok) {
-        setStatus("Please fill in the required fields (name, email, message).", true);
-        const firstInvalid = form.querySelector('[aria-invalid="true"]');
-        if (firstInvalid instanceof HTMLElement) firstInvalid.focus();
-        return;
-      }
-
-      const to = "hello@mineanvil.com";
-      const subject = encodeLine("MineAnvil updates request");
-      const body = encodeLine(
-        [
-          "Hello MineAnvil,",
-          "",
-          message,
-          "",
-          "---",
-          "Name: " + name,
-          "Email: " + email,
-          "Sent from: " + window.location.href
-        ].join("\n")
-      );
-
-      const mailto = "mailto:" + encodeURIComponent(to) + "?subject=" + subject + "&body=" + body;
-
-      setStatus("Opening your email app…", false);
-      window.location.href = mailto;
-    });
+    if (copyBtn instanceof HTMLButtonElement) {
+      copyBtn.addEventListener("click", async function () {
+        setCopyStatus("");
+        try {
+          const ok = await copyToClipboard(email);
+          if (ok) setCopyStatus("Copied.", false);
+          else setCopyStatus("Copy failed. You can copy the address manually.", true);
+        } catch (err) {
+          setCopyStatus("Copy failed. You can copy the address manually.", true);
+        }
+      });
+    }
   }
 })();
 

@@ -39,8 +39,7 @@
         "@type": "Organization",
         "name": "MineAnvil",
         "url": "https://www.mineanvil.com/",
-        "logo": "https://www.mineanvil.com/assets/logo.png",
-        "email": "hello@mineanvil.com"
+        "logo": "https://www.mineanvil.com/assets/logo.png"
       }
     </script>
     <script type="application/ld+json">
@@ -424,39 +423,29 @@
           <div class="section-head">
             <h2>Contact / Get updates</h2>
             <p class="section-subtitle">
-              No tracking. No cookies banner. This form composes an email using your default mail app.
+              Email us directly. No tracking. No cookies banner.
             </p>
           </div>
 
           <div class="grid two">
-            <div class="card">
-              <h3 class="card-title">Send a message</h3>
-              <form class="contact-form" data-contact-form>
-                <div class="field">
-                  <label for="name">Name</label>
-                  <input id="name" name="name" type="text" autocomplete="name" required />
-                </div>
-                <div class="field">
-                  <label for="email">Email</label>
-                  <input id="email" name="email" type="email" autocomplete="email" required inputmode="email" />
-                </div>
-                <div class="field">
-                  <label for="message">Message</label>
-                  <textarea id="message" name="message" rows="5" required></textarea>
-                </div>
+            <div class="card contact-card" data-contact-email="hello@mineanvil.com">
+              <h3 class="card-title">Contact</h3>
 
-                <div class="form-row">
-                  <button class="button button-primary" type="submit">Compose email</button>
-                  <p class="form-hint" id="form-hint">
-                    You can also email <a href="mailto:hello@mineanvil.com">hello@mineanvil.com</a>.
-                  </p>
-                </div>
+              <div class="contact-email-row">
+                <span class="contact-email-label">Email</span>
+                <a class="contact-email" href="mailto:" data-email-link></a>
+              </div>
 
-                <p class="form-status" role="status" aria-live="polite" data-form-status></p>
-                <p class="muted form-note">
-                  Want a hosted form later? Wire this section to Formspree or a similar provider (no keys included).
-                </p>
-              </form>
+              <div class="contact-actions">
+                <button class="button button-primary" type="button" data-copy-email>Copy email address</button>
+                <a class="button button-secondary" href="mailto:" data-open-email-client>Open email client</a>
+              </div>
+
+              <p class="contact-helper muted">Copies the address to your clipboard. Opens your default mail app.</p>
+              <p class="contact-status" role="status" aria-live="polite" data-copy-status></p>
+
+              <p class="muted contact-note">We’re especially interested in hearing from parents, educators, and club organizers.</p>
+              <p class="muted contact-note">No tracking. No cookies banner.</p>
             </div>
 
             <div class="card">
@@ -492,7 +481,7 @@
           <a href="#contact" data-scroll-to>Contact</a>
         </div>
         <div class="footer-meta">
-          <a class="muted" href="mailto:hello@mineanvil.com">hello@mineanvil.com</a>
+          <a class="muted" href="mailto:" data-footer-email-link></a>
           <div class="muted">© <span id="year">2025</span> MineAnvil. All rights reserved.</div>
           <p class="muted">Minecraft is a trademark of Mojang AB. MineAnvil is not affiliated with or endorsed by Mojang or Microsoft.</p>
         </div>
