@@ -60,7 +60,7 @@ py -m http.server 8080
 
 In `index.html`, update these placeholders:
 
-- `<link rel="canonical" href="https://mineanvil.example/">`
+- `<link rel="canonical" href="https://www.mineanvil.com/">`
 - `og:url`
 - `og:image` (point to your real domain)
 - Twitter image URL
@@ -68,11 +68,11 @@ In `index.html`, update these placeholders:
 
 In `sitemap.xml`, update:
 
-- `<loc>https://mineanvil.example/</loc>`
+- `<loc>https://www.mineanvil.com/</loc>`
 
 ## Checklist before going live
 
-- [ ] Replace `https://mineanvil.example/` with your real domain (canonical + OG + JSON-LD + sitemap)
+- [x] Set canonical + OG + JSON-LD + sitemap domain to `https://www.mineanvil.com/`
 - [ ] Replace `hello@mineanvil.example` with your real email address (HTML + JS)
 - [ ] Replace `assets/logo-placeholder.svg` with your logo
 - [ ] Replace `assets/og-image-placeholder.svg` with a real Open Graph image
