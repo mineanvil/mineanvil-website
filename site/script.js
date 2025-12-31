@@ -157,7 +157,7 @@
         return;
       }
 
-      const to = "hello@mineanvil.example"; // TODO: replace with your real address
+      const to = "hello@mineanvil.com";
       const subject = encodeLine("MineAnvil updates request");
       const body = encodeLine(
         [

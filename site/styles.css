@@ -157,6 +157,10 @@ a:hover {
   border-radius: 9px;
 }
 
+.logo-icon {
+  padding: 2px;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
